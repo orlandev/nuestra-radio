@@ -1,0 +1,147 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "cu.ondev.nuestraradio"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    // App dependencies
+    def appCompatVersion = '1.2.0'
+    def archVersion = '2.1.0'
+    def assistedInjectVersion = '0.5.2'
+    def cameraXVersion = '1.0.0-rc01'
+    def cameraXPreviewVersion = '1.0.0-alpha20'
+    def constraintLayoutVersion = '2.0.4'
+    def coordinatorLayoutVersion = '1.1.0'
+    def coreKtxVersion = '1.3.2'
+    def coroutinesVersion = '1.3.9'
+    def dataStorePreferencesVersion = '1.0.0-alpha06'
+    def espressoVersion = '3.3.0'
+    def exoplayerVersion = '2.12.0'
+    def fragmentVersion = '1.2.5'
+    def glideVersion = '4.11.0'
+    def gradleVersion = '4.1.1'
+    def guavaVersion = '30.1-android'
+    def hiltViewModelVersion = '1.0.0-alpha02'
+    def hiltVersion = '2.28.3-alpha'
+    def junitAndroidExtVersion = '1.1.2'
+    def junitVersion = '4.13.1'
+    def kotlinVersion = '1.4.21'
+    def lifecycleVersion = '2.2.0'
+    def materialVersion = '1.2.1'
+    def mlBarcodeVersion = '16.1.1'
+    def moshiVersion = '1.11.0'
+    def navigationVersion = '2.3.2'
+    def pagingVersion = '3.0.0-beta01'
+    def roomVersion = '2.2.6'
+
+
+// Basic app dependencies
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayoutVersion"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+// Assisted Inject (Dependency Injection)
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
+
+// Exoplayer (Video)
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
+
+    // CameraX
+    implementation "androidx.camera:camera-core:$cameraXVersion"
+    implementation "androidx.camera:camera-camera2:$cameraXVersion"
+    implementation "androidx.camera:camera-lifecycle:$cameraXVersion"
+    implementation "androidx.camera:camera-view:$cameraXPreviewVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
+
+    // Fragment
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
+
+    // Glide: Image loading and caching
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    // Google MLKit Barcode Scanning
+    implementation "com.google.mlkit:barcode-scanning:$mlBarcodeVersion"
+
+    // Moshi (JSON)
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+
+    //Preferences
+    implementation "androidx.datastore:datastore-preferences:$dataStorePreferencesVersion"
+
+    // Room (Database)
+    implementation "androidx.room:room-ktx:$roomVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+
+    // Paging
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+
+    // Testing dependencies
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$junitAndroidExtVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
+    testImplementation "androidx.arch.core:core-testing:$archVersion"
+    testImplementation "androidx.room:room-testing:$roomVersion"
+    testImplementation "androidx.paging:paging-common-ktx:$pagingVersion"
+}

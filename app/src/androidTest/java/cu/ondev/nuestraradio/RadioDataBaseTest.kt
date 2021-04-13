@@ -2,17 +2,15 @@ package cu.ondev.nuestraradio
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import cu.ondev.nuestraradio.data.RadioBase
 import cu.ondev.nuestraradio.data.RadioBaseDao
 import cu.ondev.nuestraradio.data.RadioDatabase
-
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
-import org.junit.Before
 
 @RunWith(AndroidJUnit4::class)
 class RadioDataBaseTest {
@@ -38,8 +36,8 @@ class RadioDataBaseTest {
     }
 
     @Test
-    fun addRadioBaseTest() {
-        val newRadio = RadioBase(0, "Radio Rebelde", "https://asdasd.asdasd.de/wedwef")
+    suspend fun addRadioBaseTest() {
+        val newRadio = RadioBase(0, "Radio Rebelde", "https://asdasd.asdasd.de/wedwef", 34)
         assertNotNull("Creating a new Radio Base", newRadio)
         try {
             radioDao.insertRadioBase(newRadio)

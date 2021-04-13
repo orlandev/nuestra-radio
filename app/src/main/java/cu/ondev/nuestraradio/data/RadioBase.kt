@@ -6,7 +6,8 @@ import cu.ondev.nuestraradio.utilities.DATABASE_TABLE
 
 @Entity(tableName = DATABASE_TABLE)
 data class RadioBase(
-    @PrimaryKey(autoGenerate = true) private val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     var radioName: String,
-    var radioStreamUrl: String
+    var radioStreamUrl: String,
+    var visitas: Int
 )

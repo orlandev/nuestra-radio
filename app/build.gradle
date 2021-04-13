@@ -130,6 +130,8 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
+    // JSOUP HTML LIBRARY
+    implementation 'org.jsoup:jsoup:1.11.2'
 
     // Paging
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"

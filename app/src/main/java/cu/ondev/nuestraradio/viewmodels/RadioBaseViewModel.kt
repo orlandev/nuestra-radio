@@ -1,25 +1,15 @@
 package cu.ondev.nuestraradio.viewmodels
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import cu.ondev.nuestraradio.data.RadioBase
 import cu.ondev.nuestraradio.data.RadioRepository
-import kotlinx.coroutines.launch
 
-class RadioBaseViewModel(private val radioBaseRepository: RadioRepository) : ViewModel() {
+class RadioBaseViewModel(radioBaseRepository: RadioRepository) : ViewModel() {
 
     val allRadioBase: LiveData<List<RadioBase>> = radioBaseRepository.allRadioBase.asLiveData()
-
-    fun insertRadioBase(newRadioBase: RadioBase) = viewModelScope.launch {
-        radioBaseRepository.insertRadioBase(newRadioBase)
-    }
-
-    fun updateRadioBase(newRadioBase: RadioBase) = viewModelScope.launch {
-        radioBaseRepository.updateRadioBase(newRadioBase)
-    }
-
-    fun deleteRadioBase(newRadioBase: RadioBase) = viewModelScope.launch {
-        radioBaseRepository.deleteRadioBase(newRadioBase)
-    }
 }
 
 class RadioBaseViewModelFactory(private val radioRepository: RadioRepository) :

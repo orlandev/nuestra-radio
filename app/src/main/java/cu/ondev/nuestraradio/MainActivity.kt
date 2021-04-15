@@ -1,29 +1,45 @@
 package cu.ondev.nuestraradio
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import cu.ondev.nuestraradio.api.RadioApi
+import cu.ondev.nuestraradio.viewmodels.RadioBaseViewModel
+import cu.ondev.nuestraradio.viewmodels.RadioBaseViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
+    private val radioBasesViewModel: RadioBaseViewModel by viewModels {
+        RadioBaseViewModelFactory((application as RadioAplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        lifecycleScope.launch(Dispatchers.IO) { RadioApi().getRadiosStreamData() }
+        radioBasesViewModel.allRadioBase.observe(this, Observer {
+            if (!it.isNullOrEmpty()) {
+                for (radio in it) {
+                    val title = radio.radioName
+                    val streamUrl = radio.radioStreamUrl
+                    val visto = radio.visitas
+                    Log.d("URL-DATA", "newRadioBase: $title | $streamUrl | $visto")
+                }
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+                //TODO Update Recycle list
+            } else {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    (application as RadioAplication).repository.updateDataBase()
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -19,9 +19,20 @@
             app:popupTheme="@style/Theme.NuestraRadio.PopupOverlay" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <fragment
+        android:id="@+id/nav_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/current_radio_play_height"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
+        tools:ignore="FragmentTagUsage"
+        tools:layout="@layout/fragment_radio_list" />
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/current_radio_play_height"
         android:layout_gravity="bottom"
         app:cardElevation="28dp">
 
@@ -30,19 +41,19 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/radio_name"
+                android:id="@+id/current_radio_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RadioName"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/radio_visits"
                 app:layout_constraintHorizontal_bias="0.118"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/current_image_icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.508" />
 
             <TextView
-                android:id="@+id/radio_visits"
+                android:id="@+id/current_radio_visits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -52,7 +63,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/current_image_icon"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_marginStart="16dp"

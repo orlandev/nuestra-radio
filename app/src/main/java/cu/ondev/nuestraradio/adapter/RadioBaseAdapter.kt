@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.exoplayer2.MediaItem
 import cu.ondev.nuestraradio.R
 import cu.ondev.nuestraradio.data.RadioBase
+import cu.ondev.nuestraradio.streamplayer.SimplePlayer
 
 class RadioBaseAdapter(val radioBases: List<RadioBase>) :
     RecyclerView.Adapter<RadioBaseAdapter.ViewHolder>() {
@@ -24,9 +26,16 @@ class RadioBaseAdapter(val radioBases: List<RadioBase>) :
 
     override fun onBindViewHolder(holder: RadioBaseAdapter.ViewHolder, position: Int) {
         val radioBase = radioBases[position]
-
         holder.radioTitle.text = radioBase.radioName
         holder.radioVisits.text = radioBase.visitas.toString()
+        holder.view.setOnClickListener {
+            val player = SimplePlayer.getPlayer(holder.view.context)
+            val mediaItem = MediaItem.Builder().setUri(radioBase.radioStreamUrl).build()
+            player.setMediaItem(mediaItem)
+            player.playWhenReady = true
+            player.seekTo(0)
+            player.prepare()
+        }
     }
 
     override fun getItemCount(): Int = radioBases.size

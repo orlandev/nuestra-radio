@@ -14,10 +14,7 @@ import android.media.AudioManager.OnAudioFocusChangeListener
 import android.media.MediaPlayer
 import android.media.MediaPlayer.*
 import android.media.session.MediaSessionManager
-import android.os.Binder
-import android.os.Build
-import android.os.IBinder
-import android.os.RemoteException
+import android.os.*
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -138,6 +135,8 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
         //Reset so that the MediaPlayer is not pointing to another data source
         mediaPlayer?.reset()
         mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        mediaPlayer?.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK);
+
         try {
             // Set the data source to the mediaFile location
             mediaPlayer?.setDataSource(mediaFile)
@@ -307,7 +306,8 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
 
         //Handle Intent action from MediaSession.TransportControls
         handleIncomingActions(intent)
-        return super.onStartCommand(intent, flags, startId)
+        super.onStartCommand(intent, flags, startId)
+        return Service.START_STICKY_COMPATIBILITY;
     }
 
     override fun onSeekComplete(mp: MediaPlayer?) {

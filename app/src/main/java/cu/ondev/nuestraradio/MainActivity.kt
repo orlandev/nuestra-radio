@@ -34,12 +34,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         savedInstanceState.putBoolean("ServiceState", SimplePlayer.serviceBound)
+        savedInstanceState.putInt("radioIndex", SimplePlayer.currentRadio)
         super.onSaveInstanceState(savedInstanceState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         SimplePlayer.serviceBound = savedInstanceState.getBoolean("ServiceState")
+        SimplePlayer.currentRadio = savedInstanceState.getInt("radioIndex")
     }
 
     override fun onDestroy() {

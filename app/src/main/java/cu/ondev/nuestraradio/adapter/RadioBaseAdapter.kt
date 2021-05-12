@@ -33,7 +33,7 @@ class RadioBaseAdapter(private val radioBases: List<RadioBase>) :
         holder.view.setOnClickListener {
             SimplePlayer.playAudio(
                 (it.context) as Activity,
-                radioBase.radioStreamUrl
+                position
             )
         }
     }

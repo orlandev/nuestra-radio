@@ -6,13 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import cu.ondev.nuestraradio.data.RadioBase
 
 object SimplePlayer {
     const val Broadcast_PLAY_NEW_AUDIO = "cu.ondev.PlayNewAudio"
-
-
     var player: MediaPlayerService? = null
     var serviceBound = false
+    var currentRadio: Int = 0
+    var allRadio: List<RadioBase>? = null
+
 
     val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -27,10 +29,14 @@ object SimplePlayer {
         }
     }
 
-    fun playAudio(activity: Activity, mediaUrl: String) {
+    fun getRadioBaseByIndex(index: Int): RadioBase {
+        return allRadio!![index]
+    }
+
+    fun playAudio(activity: Activity, radioIndex: Int) {
         if (!serviceBound) {
             val playerIntent = Intent(activity, MediaPlayerService::class.java)
-            playerIntent.putExtra("media", mediaUrl)
+            currentRadio = radioIndex
             activity.startService(playerIntent)
             activity.bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         } else {

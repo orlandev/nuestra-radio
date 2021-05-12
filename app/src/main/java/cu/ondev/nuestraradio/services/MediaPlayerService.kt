@@ -41,28 +41,16 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
     private var mediaSessionManager: MediaSessionManager? = null
     private var mediaSession: MediaSessionCompat? = null
     private var transportControls: MediaControllerCompat.TransportControls? = null
-
-    //AudioPlayer notification ID
     private val NOTIFICATION_ID = 101
-
-    //Handle incoming phone calls
     private var ongoingCall = false
     private var phoneStateListener: PhoneStateListener? = null
     private var telephonyManager: TelephonyManager? = null
-
     private var mediaPlayer: MediaPlayer? = null
     private var audioManager: AudioManager? = null
-
-    //Used to pause/resume MediaPlayer
     private var resumePosition = 0
-
-    //path to the audio file
-    private var mediaFile: String? = null
-
     override fun onCreate() {
         super.onCreate()
         // Perform one-time setup procedures
-
         // Manage incoming phone calls during playback.
         // Pause MediaPlayer on incoming call,
         // Resume on hangup.
@@ -139,7 +127,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
 
         try {
             // Set the data source to the mediaFile location
-            mediaPlayer?.setDataSource(mediaFile)
+            mediaPlayer?.setDataSource(SimplePlayer.getRadioBaseByIndex(SimplePlayer.currentRadio).radioStreamUrl)
         } catch (e: IOException) {
             e.printStackTrace()
             stopSelf()
@@ -266,28 +254,6 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        try {
-            //An audio file is passed to the service through putExtra();
-            mediaFile = intent!!.extras!!.getString("media")
-        } catch (e: java.lang.NullPointerException) {
-            stopSelf()
-        }
-
-        /*try {
-            //Load data from SharedPreferences
-            *//*  val storage = StorageUtil(applicationContext)
-              audioList = storage.loadAudio()
-              audioIndex = storage.loadAudioIndex()
-              if (audioIndex !== -1 && audioIndex < audioList.size()) {
-                  //index is in a valid range
-                  activeAudio = audioList.get(audioIndex)
-              } else {
-                  stopSelf()
-              }*//*
-        } catch (e: NullPointerException) {
-            stopSelf()
-        }*/
-
         //Request audio focus
         if (!requestAudioFocus()) {
             //Could not gain focus
@@ -317,16 +283,22 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
     private fun handleIncomingActions(playbackAction: Intent?) {
         if (playbackAction == null || playbackAction.action == null) return
         val actionString = playbackAction.action
-        if (actionString.equals(ACTION_PLAY, ignoreCase = true)) {
-            transportControls!!.play()
-        } else if (actionString.equals(ACTION_PAUSE, ignoreCase = true)) {
-            transportControls!!.pause()
-        } else if (actionString.equals(ACTION_NEXT, ignoreCase = true)) {
-            transportControls!!.skipToNext()
-        } else if (actionString.equals(ACTION_PREVIOUS, ignoreCase = true)) {
-            transportControls!!.skipToPrevious()
-        } else if (actionString.equals(ACTION_STOP, ignoreCase = true)) {
-            transportControls!!.stop()
+        when {
+            actionString.equals(ACTION_PLAY, ignoreCase = true) -> {
+                transportControls!!.play()
+            }
+            actionString.equals(ACTION_PAUSE, ignoreCase = true) -> {
+                transportControls!!.pause()
+            }
+            actionString.equals(ACTION_NEXT, ignoreCase = true) -> {
+                transportControls!!.skipToNext()
+            }
+            actionString.equals(ACTION_PREVIOUS, ignoreCase = true) -> {
+                transportControls!!.skipToPrevious()
+            }
+            actionString.equals(ACTION_STOP, ignoreCase = true) -> {
+                transportControls!!.stop()
+            }
         }
     }
 
@@ -370,7 +342,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
         if (mediaSessionManager != null) return  //mediaSessionManager exists
         mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager
         // Create a new MediaSession
-        mediaSession = MediaSessionCompat(applicationContext, "AudioPlayer")
+        mediaSession = MediaSessionCompat(applicationContext, "NuestraRadioPlayer")
         //Get MediaSessions transport controls
         transportControls = mediaSession!!.controller.transportControls
         //set MediaSession -> ready to receive media commands
@@ -406,7 +378,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
 
             override fun onSkipToPrevious() {
                 super.onSkipToPrevious()
-                //     skipToPrevious()
+                //skipToPrevious()
                 updateMetaData()
                 buildNotification(PlaybackStatus.PLAYING)
             }
@@ -430,12 +402,16 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
             R.drawable.common_full_open_on_phone
         ) //replace with medias albumArt
         // Update the current metadata
+        var radioBase = SimplePlayer.getRadioBaseByIndex(SimplePlayer.currentRadio)
         mediaSession!!.setMetadata(
             MediaMetadataCompat.Builder()
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "Artist")
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "Album")
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Titulo")
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, radioBase.radioName)
+                .putString(
+                    MediaMetadataCompat.METADATA_KEY_ALBUM,
+                    "Visitas: ${radioBase.visitas}"
+                )
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, radioBase.radioName)
                 .build()
         )
     }
@@ -461,7 +437,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
 
         // Create a new Notification
         createNotificationChannel()
-
+        var radioBase = SimplePlayer.getRadioBaseByIndex(SimplePlayer.currentRadio)
         val notificationBuilder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setShowWhen(false) // Set the Notification style
@@ -473,9 +449,9 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
                 .setColor(resources.getColor(R.color.design_default_color_primary)) // Set the large and small icons
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(R.drawable.ic_round_play_arrow_24) // Set Notification content information
-                .setContentText("getArtist()")
-                .setContentTitle("getAlbum()")
-                .setContentInfo("getTitle()") // Add playback actions
+                .setContentText(radioBase.radioName)
+                .setContentTitle("Visitas: ${radioBase.visitas}")
+                .setContentInfo(radioBase.radioName) // Add playback actions
                 .addAction(R.drawable.ic_round_skip_previous_24, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", play_pauseAction)
                 .addAction(
@@ -541,4 +517,6 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(NOTIFICATION_ID)
     }
+
+
 }

@@ -8,7 +8,6 @@ import cu.ondev.nuestraradio.data.RadioBase
 import cu.ondev.nuestraradio.data.RadioRepository
 
 class RadioBaseViewModel(radioBaseRepository: RadioRepository) : ViewModel() {
-
     val allRadioBase: LiveData<List<RadioBase>> = radioBaseRepository.allRadioBase.asLiveData()
 }
 

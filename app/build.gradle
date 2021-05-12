@@ -15,7 +15,6 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -24,7 +23,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -39,114 +38,67 @@ android {
 
 dependencies {
 
-    // App dependencies
-    def appCompatVersion = '1.2.0'
-    def archVersion = '2.1.0'
-    def assistedInjectVersion = '0.5.2'
-    def cameraXVersion = '1.0.0-rc01'
-    def cameraXPreviewVersion = '1.0.0-alpha20'
-    def constraintLayoutVersion = '2.0.4'
-    def coordinatorLayoutVersion = '1.1.0'
-    def coreKtxVersion = '1.3.2'
-    def coroutinesVersion = '1.3.9'
-    def dataStorePreferencesVersion = '1.0.0-alpha06'
-    def espressoVersion = '3.3.0'
-    def exoplayerVersion = '2.12.0'
-    def fragmentVersion = '1.2.5'
-    def glideVersion = '4.11.0'
-    def gradleVersion = '4.1.1'
-    def guavaVersion = '30.1-android'
-    def hiltViewModelVersion = '1.0.0-alpha02'
-    def hiltVersion = '2.28.3-alpha'
-    def junitAndroidExtVersion = '1.1.2'
-    def junitVersion = '4.13.1'
-    def kotlinVersion = '1.4.21'
-    def lifecycleVersion = '2.2.0'
-    def materialVersion = '1.2.1'
-    def mlBarcodeVersion = '16.1.1'
-    def moshiVersion = '1.11.0'
-    def navigationVersion = '2.3.2'
-    def pagingVersion = '3.0.0-beta01'
-    def roomVersion = '2.2.6'
+
 
 
 // Basic app dependencies
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "androidx.core:core-ktx:$coreKtxVersion"
-    implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayoutVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin_version"
+    implementation "androidx.core:core-ktx:1.3.2"
+    implementation "androidx.appcompat:appcompat:1.2.0"
+    implementation "com.google.android.material:material:1.3.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-// Assisted Inject (Dependency Injection)
-    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
-    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
-
 // Exoplayer (Video)
-    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
-
-    // CameraX
-    implementation "androidx.camera:camera-core:$cameraXVersion"
-    implementation "androidx.camera:camera-camera2:$cameraXVersion"
-    implementation "androidx.camera:camera-lifecycle:$cameraXVersion"
-    implementation "androidx.camera:camera-view:$cameraXPreviewVersion"
-    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "com.google.android.exoplayer:exoplayer-core:2.13.3"
+    implementation "com.google.android.exoplayer:exoplayer-dash:2.13.3"
+    implementation "com.google.android.exoplayer:exoplayer-ui:2.13.3"
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-process:2.3.1"
 
     // Fragment
-    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
+    implementation "androidx.fragment:fragment-ktx:1.3.3"
 
     // Glide: Image loading and caching
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation "com.github.bumptech.glide:glide:4.12.0"
+    kapt "com.github.bumptech.glide:compiler:4.12.0"
 
     // Google MLKit Barcode Scanning
-    implementation "com.google.mlkit:barcode-scanning:$mlBarcodeVersion"
+    implementation "com.google.mlkit:barcode-scanning:16.1.1"
 
-    // Moshi (JSON)
-    implementation "com.squareup.moshi:moshi:$moshiVersion"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion"
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
 
     //Preferences
-    implementation "androidx.datastore:datastore-preferences:$dataStorePreferencesVersion"
+    implementation "androidx.datastore:datastore-preferences:1.0.0-beta01"
 
     // Room (Database)
-    implementation "androidx.room:room-ktx:$roomVersion"
-    implementation "androidx.room:room-runtime:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "androidx.room:room-ktx:2.3.0"
+    implementation "androidx.room:room-runtime:2.3.0"
+    kapt "androidx.room:room-compiler:2.3.0"
 
     // JSOUP HTML LIBRARY
     implementation 'org.jsoup:jsoup:1.11.2'
 
-    // Paging
-    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
-
     // Testing dependencies
-    testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$junitAndroidExtVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"
-    androidTestImplementation "androidx.navigation:navigation-testing:$navigationVersion"
-    testImplementation "androidx.arch.core:core-testing:$archVersion"
-    testImplementation "androidx.room:room-testing:$roomVersion"
-    testImplementation "androidx.paging:paging-common-ktx:$pagingVersion"
+    testImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test.ext:junit:1.1.2"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.3.0"
+    androidTestImplementation "androidx.navigation:navigation-testing:2.3.5"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "androidx.room:room-testing:2.3.0"
+
 }

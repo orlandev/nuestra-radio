@@ -1,28 +1,18 @@
 package cu.ondev.nuestraradio
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import cu.ondev.nuestraradio.viewmodels.RadioBaseViewModel
-import cu.ondev.nuestraradio.viewmodels.RadioBaseViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import cu.ondev.nuestraradio.services.SimplePlayer
+
 
 class MainActivity : AppCompatActivity() {
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -40,4 +30,25 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        savedInstanceState.putBoolean("ServiceState", SimplePlayer.serviceBound)
+        super.onSaveInstanceState(savedInstanceState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        SimplePlayer.serviceBound = savedInstanceState.getBoolean("ServiceState")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (SimplePlayer.serviceBound) {
+            unbindService(SimplePlayer.serviceConnection)
+            //service is active
+            SimplePlayer.player?.stopSelf()
+        }
+    }
+
 }

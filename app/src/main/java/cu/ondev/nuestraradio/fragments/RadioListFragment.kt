@@ -69,7 +69,9 @@ class RadioListFragment : Fragment() {
                     Toast.makeText(context, "${ex.message}", Toast.LENGTH_SHORT).show()
                 }
             } finally {
-                binding.swipeContainer.isRefreshing = false
+                lifecycleScope.launch(Dispatchers.Main) {
+                    binding.swipeContainer.isRefreshing = false
+                }
             }
         }
     }

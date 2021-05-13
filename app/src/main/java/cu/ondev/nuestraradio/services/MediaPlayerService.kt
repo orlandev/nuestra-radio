@@ -48,6 +48,8 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
     private var mediaPlayer: MediaPlayer? = null
     private var audioManager: AudioManager? = null
     private var resumePosition = 0
+    val CHANNEL_ID = "NUESTRA_RADIO_CHANNEL_ID"
+
     override fun onCreate() {
         super.onCreate()
         // Perform one-time setup procedures
@@ -112,6 +114,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
         // StorageUtil(applicationContext).clearCachedAudioPlaylist()
     }
 
+
     private fun initMediaPlayer() {
         mediaPlayer = MediaPlayer()
         mediaPlayer?.setOnCompletionListener(this)
@@ -127,7 +130,10 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
 
         try {
             // Set the data source to the mediaFile location
-            mediaPlayer?.setDataSource(SimplePlayer.getRadioBaseByIndex(SimplePlayer.currentRadio).radioStreamUrl)
+            val mediaUrl =
+                SimplePlayer.getRadioBaseByIndex(SimplePlayer.currentRadio).radioStreamUrl
+            mediaPlayer?.setDataSource(mediaUrl)
+            Log.d("TAG", "initMediaPlayer: Playing now: $mediaUrl")
         } catch (e: IOException) {
             e.printStackTrace()
             stopSelf()
@@ -135,7 +141,6 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
         mediaPlayer?.prepareAsync()
 
     }
-
 
     private val iBinder: IBinder = LocalBinder()
 
@@ -325,6 +330,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
             //reset mediaPlayer to play the new Audio
             stopMedia()
             mediaPlayer?.reset()
+            Log.d("TAG", "onReceive: Broadcast Received")
             initMediaPlayer()
             updateMetaData()
             buildNotification(PlaybackStatus.PLAYING)
@@ -464,8 +470,6 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
             notificationBuilder.build()
         )
     }
-
-    val CHANNEL_ID = "NUESTRA_RADIO_CHANNEL_ID"
 
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because

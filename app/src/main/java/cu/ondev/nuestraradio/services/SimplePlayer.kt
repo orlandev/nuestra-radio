@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.util.Log
 import cu.ondev.nuestraradio.data.RadioBase
 
 object SimplePlayer {
@@ -37,12 +38,25 @@ object SimplePlayer {
         if (!serviceBound) {
             val playerIntent = Intent(activity, MediaPlayerService::class.java)
             currentRadio = radioIndex
+            Log.d(
+                "TAG",
+                "playAudio: CurrentRadioIndex: $currentRadio"
+            )
             activity.startService(playerIntent)
-            activity.bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+            activity.bindService(
+                playerIntent,
+                serviceConnection,
+                Context.BIND_AUTO_CREATE
+            )
         } else {
             //Service is active
             //Send media with BroadcastReceiver
             val broadcastIntent = Intent(Broadcast_PLAY_NEW_AUDIO)
+            Log.d(
+                "TAG",
+                "playAudio: CurrentRadioIndex: $currentRadio"
+            )
+            currentRadio = radioIndex
             activity.sendBroadcast(broadcastIntent)
         }
     }

@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         savedInstanceState.putBoolean("ServiceState", SimplePlayer.serviceBound)
         savedInstanceState.putInt("radioIndex", SimplePlayer.currentRadio)

@@ -1,9 +1,6 @@
 package cu.ondev.nuestraradio.services
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -60,7 +57,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
         //ACTION_AUDIO_BECOMING_NOISY -- change in audio outputs -- BroadcastReceiver
         registerBecomingNoisyReceiver()
         //Listen for new Audio to play -- BroadcastReceiver
-        register_playNewAudio()
+        registerPlayNewAudio()
     }
 
     //Handle incoming phone calls
@@ -337,7 +334,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
         }
     }
 
-    private fun register_playNewAudio() {
+    private fun registerPlayNewAudio() {
         //Register playNewMedia receiver
         val filter = IntentFilter(SimplePlayer.Broadcast_PLAY_NEW_AUDIO)
         registerReceiver(playNewAudio, filter)
@@ -377,14 +374,15 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
 
             override fun onSkipToNext() {
                 super.onSkipToNext()
-                //   skipToNext()
+                skipToNext()
+
                 updateMetaData()
                 buildNotification(PlaybackStatus.PLAYING)
             }
 
             override fun onSkipToPrevious() {
                 super.onSkipToPrevious()
-                //skipToPrevious()
+                skipToPrevious()
                 updateMetaData()
                 buildNotification(PlaybackStatus.PLAYING)
             }
@@ -400,6 +398,18 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
                 super.onSeekTo(position)
             }
         })
+    }
+
+    private fun skipToNext() {
+        SimplePlayer.skipNextRadio()
+        mediaPlayer?.reset()
+        initMediaPlayer()
+    }
+
+    private fun skipToPrevious() {
+        SimplePlayer.skipToPrevious()
+        mediaPlayer?.reset()
+        initMediaPlayer()
     }
 
     private fun updateMetaData() {
@@ -487,6 +497,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
             notificationManager.createNotificationChannel(channel)
         }
     }
+
 
     private fun playbackAction(actionNumber: Int): PendingIntent? {
         val playbackAction = Intent(this, MediaPlayerService::class.java)

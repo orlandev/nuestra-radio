@@ -16,7 +16,6 @@ object SimplePlayer {
     var currentRadio: Int = 0
     var allRadio: List<RadioBase>? = null
 
-
     val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
@@ -60,5 +59,18 @@ object SimplePlayer {
             activity.sendBroadcast(broadcastIntent)
         }
     }
+
+    fun skipNextRadio() {
+        if (currentRadio < allRadio!!.size) {
+            currentRadio++
+        }
+    }
+
+    fun skipToPrevious() {
+        if (currentRadio > 0) {
+            currentRadio--
+        }
+    }
+
 
 }

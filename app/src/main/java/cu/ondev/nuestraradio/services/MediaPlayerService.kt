@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
 import android.media.MediaPlayer
@@ -19,7 +21,11 @@ import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import cu.ondev.nuestraradio.R
+import cu.ondev.nuestraradio.utilities.RadioPosterUrl
 import java.io.IOException
 
 
@@ -413,23 +419,40 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
     }
 
     private fun updateMetaData() {
-        val albumArt = BitmapFactory.decodeResource(
-            resources,
-            R.drawable.common_full_open_on_phone
-        ) //replace with medias albumArt
-        // Update the current metadata
         var radioBase = SimplePlayer.getRadioBaseByIndex(SimplePlayer.currentRadio)
-        mediaSession!!.setMetadata(
-            MediaMetadataCompat.Builder()
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, radioBase.radioName)
-                .putString(
-                    MediaMetadataCompat.METADATA_KEY_ALBUM,
-                    "Visitas: ${radioBase.visitas}"
-                )
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, radioBase.radioName)
-                .build()
-        )
+        val posterUrl = RadioPosterUrl.getRadioPoster(radioBase.radioName)
+        var albumArt: Bitmap? = null
+        Glide.with(this)
+            .asBitmap()
+            .load(posterUrl)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    albumArt = resource
+                    mediaSession!!.setMetadata(
+                        MediaMetadataCompat.Builder()
+                            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
+                            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, radioBase.radioName)
+                            .putString(
+                                MediaMetadataCompat.METADATA_KEY_ALBUM,
+                                "Visitas: ${radioBase.visitas}"
+                            )
+                            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, radioBase.radioName)
+                            .build()
+                    )
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // this is called when imageView is cleared on lifecycle call or for
+                    // some other reason.
+                    // if you are referencing the bitmap somewhere else too other than this imageView
+                    // clear it here as you can no longer have the bitmap
+                }
+            })
+
+        //replace with medias albumArt
+        // Update the current metadata
+
+
     }
 
     private fun buildNotification(playbackStatus: PlaybackStatus) {
@@ -462,7 +485,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
                         .setMediaSession(mediaSession!!.sessionToken) // Show our playback controls in the compact notification view.
                         .setShowActionsInCompactView(0, 1, 2)
                 ) // Set the Notification color
-                .setColor(resources.getColor(R.color.design_default_color_primary)) // Set the large and small icons
+                .setColor(resources.getColor(R.color.white)) // Set the large and small icons
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(R.drawable.ic_round_play_arrow_24) // Set Notification content information
                 .setContentText(radioBase.radioName)

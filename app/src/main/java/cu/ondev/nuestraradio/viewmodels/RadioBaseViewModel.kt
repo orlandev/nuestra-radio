@@ -7,11 +7,15 @@ import androidx.lifecycle.asLiveData
 import cu.ondev.nuestraradio.data.RadioBase
 import cu.ondev.nuestraradio.data.RadioRepository
 
-class RadioBaseViewModel(radioBaseRepository: RadioRepository) : ViewModel() {
-    val allRadioBase: LiveData<List<RadioBase>> = radioBaseRepository.allRadioBase.asLiveData()
+class RadioBaseViewModel(private val radioRepository: RadioRepository) : ViewModel() {
+    val allRadioBase: LiveData<List<RadioBase>> = radioRepository.allRadioBase.asLiveData()
+
+    fun getRepository(): RadioRepository {
+        return radioRepository
+    }
 }
 
-class RadioBaseViewModelFactory(private val radioRepository: RadioRepository) :
+class RadioBaseViewModelFactory(val radioRepository: RadioRepository) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

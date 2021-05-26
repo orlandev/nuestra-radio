@@ -10,9 +10,10 @@ import cu.ondev.nuestraradio.services.SimplePlayer
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_NuestraRadio)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(findViewById(R.id.toolbar))
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

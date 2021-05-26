@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
@@ -51,6 +50,9 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
     private var mediaPlayer: MediaPlayer? = null
     private var audioManager: AudioManager? = null
     private var resumePosition = 0
+    private var radioIcon: Bitmap? = null
+
+
     val CHANNEL_ID = "NUESTRA_RADIO_CHANNEL_ID"
 
     override fun onCreate() {
@@ -421,16 +423,16 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
     private fun updateMetaData() {
         var radioBase = SimplePlayer.getRadioBaseByIndex(SimplePlayer.currentRadio)
         val posterUrl = RadioPosterUrl.getRadioPoster(radioBase.radioName)
-        var albumArt: Bitmap? = null
+
         Glide.with(this)
             .asBitmap()
             .load(posterUrl)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    albumArt = resource
+                    radioIcon = resource
                     mediaSession!!.setMetadata(
                         MediaMetadataCompat.Builder()
-                            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
+                            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, radioIcon)
                             .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, radioBase.radioName)
                             .putString(
                                 MediaMetadataCompat.METADATA_KEY_ALBUM,
@@ -469,10 +471,7 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
             //create the play action
             play_pauseAction = playbackAction(0)
         }
-        val largeIcon = BitmapFactory.decodeResource(
-            resources,
-            R.drawable.ic_round_play_arrow_24
-        ) //replace with your own image
+
 
         // Create a new Notification
         createNotificationChannel()
@@ -485,9 +484,9 @@ class MediaPlayerService : Service(), OnCompletionListener, OnPreparedListener,
                         .setMediaSession(mediaSession!!.sessionToken) // Show our playback controls in the compact notification view.
                         .setShowActionsInCompactView(0, 1, 2)
                 ) // Set the Notification color
-                .setColor(resources.getColor(R.color.white)) // Set the large and small icons
-                .setLargeIcon(largeIcon)
-                .setSmallIcon(R.drawable.ic_round_play_arrow_24) // Set Notification content information
+                .setColor(resources.getColor(R.color.gray)) // Set the large and small icons
+                .setLargeIcon(radioIcon)
+                .setSmallIcon(R.drawable.ic_launcher_foreground) // Set Notification content information
                 .setContentText(radioBase.radioName)
                 .setContentTitle("Visitas: ${radioBase.visitas}")
                 .setContentInfo(radioBase.radioName) // Add playback actions

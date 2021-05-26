@@ -26,12 +26,11 @@ class RadioListFragment : Fragment() {
     private val radioBasesViewModel: RadioBaseViewModel by viewModels {
         RadioBaseViewModelFactory((requireActivity().application as RadioAplication).repository)
     }
-    private lateinit var radioBaseRepository: RadioRepository
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        radioBaseRepository = (requireActivity().application as RadioAplication).repository
+    private val radioBaseRepository: RadioRepository by lazy { radioBasesViewModel.getRepository() }
+    private val radioBaseListAdapter: RadioBaseAdapter by lazy {
+        RadioBaseAdapter()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +38,7 @@ class RadioListFragment : Fragment() {
     ): View? {
         binding = FragmentRadioListBinding.inflate(inflater, container, false)
 
+        binding.radioList.adapter = radioBaseListAdapter
         binding.swipeContainer.setOnRefreshListener {
             updateRadioDataBase()
         }
@@ -46,7 +46,7 @@ class RadioListFragment : Fragment() {
         radioBasesViewModel.allRadioBase.observe(viewLifecycleOwner, Observer {
             if (!it.isNullOrEmpty()) {
                 SimplePlayer.allRadio = it
-                binding.radioList.adapter = RadioBaseAdapter(it)
+                radioBaseListAdapter.setData(it)
             } else {
                 updateRadioDataBase()
             }

@@ -14,13 +14,36 @@ import cu.ondev.nuestraradio.data.RadioBase
 import cu.ondev.nuestraradio.services.SimplePlayer
 import cu.ondev.nuestraradio.utilities.RadioPosterUrl
 
-class RadioBaseAdapter(private val radioBases: List<RadioBase>) :
+class RadioBaseAdapter :
     RecyclerView.Adapter<RadioBaseAdapter.ViewHolder>() {
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val radioIcon: ImageView = view.findViewById<ImageView>(R.id.radio_icon)
-        val radioTitle: TextView = view.findViewById<TextView>(R.id.current_radio_name)
-        val radioVisits: TextView = view.findViewById<TextView>(R.id.radio_visits)
 
+    private val radioBases = mutableListOf<RadioBase>()
+
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val radioIcon: ImageView by lazy { view.findViewById(R.id.radio_icon) }
+        val radioTitle: TextView by lazy { view.findViewById(R.id.current_radio_name) }
+        val radioVisits: TextView by lazy { view.findViewById(R.id.radio_visits) }
+
+        fun bindData(radioBase: RadioBase) {
+            radioTitle.text = radioBase.radioName
+            radioVisits.text = radioBase.visitas.toString()
+
+            val radioPosterUrl = RadioPosterUrl.getRadioPoster(radioBase.radioName)
+
+            Glide.with(itemView.context)
+                .load(radioPosterUrl)
+                .error(R.drawable.radio_cuban_poster)
+                .placeholder(R.drawable.radio_cuban_poster)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(radioIcon)
+
+            view.setOnClickListener {
+                SimplePlayer.playAudio(
+                    (it.context) as Activity,
+                    position
+                )
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RadioBaseAdapter.ViewHolder {
@@ -31,24 +54,13 @@ class RadioBaseAdapter(private val radioBases: List<RadioBase>) :
 
     override fun onBindViewHolder(holder: RadioBaseAdapter.ViewHolder, position: Int) {
         val radioBase = radioBases[position]
-        holder.radioTitle.text = radioBase.radioName
-        holder.radioVisits.text = radioBase.visitas.toString()
+        holder.bindData(radioBase)
+    }
 
-        val radioPosterUrl = RadioPosterUrl.getRadioPoster(radioBase.radioName)
-
-        Glide.with(holder.itemView.context)
-            .load(radioPosterUrl)
-            .error(R.drawable.radio_cuban_poster)
-            .placeholder(R.drawable.radio_cuban_poster)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(holder.radioIcon)
-
-        holder.view.setOnClickListener {
-            SimplePlayer.playAudio(
-                (it.context) as Activity,
-                position
-            )
-        }
+    fun setData(newList: List<RadioBase>) {
+        radioBases.clear()
+        radioBases.addAll(newList)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = radioBases.size

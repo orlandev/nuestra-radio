@@ -22,4 +22,8 @@
     <style name="Theme.NuestraRadio.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.NuestraRadio.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="SplashScreen" parent="Theme.NuestraRadio">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 </resources>

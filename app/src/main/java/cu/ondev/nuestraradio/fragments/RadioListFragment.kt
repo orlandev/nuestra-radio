@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.inmersoft.trinidadpatrimonial.core.imageloader.ImageLoader
 import cu.ondev.nuestraradio.RadioAplication
 import cu.ondev.nuestraradio.adapter.RadioBaseAdapter
 import cu.ondev.nuestraradio.data.RadioRepository
@@ -22,13 +23,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RadioListFragment : Fragment() {
+
     private lateinit var binding: FragmentRadioListBinding
+
     private val radioBasesViewModel: RadioBaseViewModel by viewModels {
         RadioBaseViewModelFactory((requireActivity().application as RadioAplication).repository)
     }
-    private val radioBaseRepository: RadioRepository by lazy { radioBasesViewModel.getRepository() }
-    private val radioBaseListAdapter: RadioBaseAdapter by lazy {
-        RadioBaseAdapter()
+
+    private val imageLoader: ImageLoader by lazy {
+        (requireActivity().application as RadioAplication).imageLoader
+    }
+
+
+    private
+    val radioBaseRepository: RadioRepository by lazy { radioBasesViewModel.getRepository() }
+
+    private
+    val radioBaseListAdapter: RadioBaseAdapter by lazy {
+        RadioBaseAdapter(imageLoader)
     }
 
 

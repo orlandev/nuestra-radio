@@ -7,7 +7,7 @@ import com.inmersoft.trinidadpatrimonial.core.imageloader.ImageLoader
 import cu.ondev.nuestraradio.data.RadioBase
 import cu.ondev.nuestraradio.databinding.RadioItemsBinding
 
-class RadioBaseAdapter(val imageLoader: ImageLoader) :
+class RadioBaseAdapter(private val imageLoader: ImageLoader) :
     RecyclerView.Adapter<RadioBaseViewHolder>() {
 
     private val radioBases = mutableListOf<RadioBase>()

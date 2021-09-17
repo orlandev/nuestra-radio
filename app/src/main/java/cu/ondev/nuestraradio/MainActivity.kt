@@ -13,7 +13,6 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_NuestraRadio)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

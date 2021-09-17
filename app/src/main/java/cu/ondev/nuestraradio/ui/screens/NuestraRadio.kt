@@ -4,22 +4,22 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import cu.ondev.nuestraradio.ui.theme.*
 
@@ -31,18 +31,26 @@ fun NuestraRadio() {
 
 @Composable
 fun Banner(modifier: Modifier = Modifier) {
+
+    var isFavorite = remember { mutableStateOf(false) }
+
     DrawBackground(
         modifier = modifier
             .fillMaxSize()
             .background(color = OrangeDark)
     ) {
-        Row(modifier = Modifier.fillMaxSize()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(end = 16.dp, top = 20.dp)
+        ) {
             Column(
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(0.5f)
+                    .weight(0.3f)
             ) {
-                Spacer(modifier = Modifier.padding(top = 70.dp))
                 Text(
                     modifier = Modifier.padding(start = 50.dp),
                     text = "25/30",
@@ -63,11 +71,28 @@ fun Banner(modifier: Modifier = Modifier) {
                 )
             }
             IconButton(
+                onClick = {
+                    isFavorite.value = !isFavorite.value
+                },
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(shape = CircleShape),
-                onClick = { /*TODO*/ }) {
-                Icon(Icons.Filled.FavoriteBorder, "menu")   // ok
+                    .clip(CircleShape)
+                    .background(color = OrangeDark)
+            ) {
+
+                if(!isFavorite.value) {
+                    Icon(
+                        Icons.Filled.FavoriteBorder,
+                        tint = Color.White,
+                        contentDescription = "favorites"
+                    )
+                }else {
+                    Icon(
+                        Icons.Filled.Favorite,
+                        tint = Color.White,
+                        contentDescription = "favorites"
+                    )
+                }
             }
         }
     }
@@ -75,10 +100,10 @@ fun Banner(modifier: Modifier = Modifier) {
 
 @Composable
 fun DrawBackground(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    val smallCircleRadius = 75f
-    val smallOffset = Offset(x = -50f, y = -80f)
-    val bigCircleRadius = 120f
-    val bigCircleOffset = Offset(x = 230f, y = -120f)
+    val smallCircleRadius = 60f
+    val smallOffset = Offset(x = -50f, y = -50f)
+    val bigCircleRadius = 180f
+    val bigCircleOffset = Offset(x = 180f, y = -50f)
     Box(modifier = modifier) {
         CircleDraw(
             modifier = Modifier

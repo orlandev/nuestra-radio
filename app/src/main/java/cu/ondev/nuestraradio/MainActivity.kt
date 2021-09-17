@@ -1,33 +1,27 @@
 package cu.ondev.nuestraradio
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import cu.ondev.nuestraradio.services.SimplePlayer
+import cu.ondev.nuestraradio.ui.screens.NuestraRadio
+import cu.ondev.nuestraradio.ui.theme.NuestraRadioTheme
 
-
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.Theme_NuestraRadio)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        setContent {
+            NuestraRadioTheme {
+                // A surface container using the 'background' color from the theme
+                NuestraRadio()
+            }
         }
     }
 
@@ -51,5 +45,4 @@ class MainActivity : AppCompatActivity() {
             SimplePlayer.player?.stopSelf()
         }
     }
-
 }

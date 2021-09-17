@@ -69,7 +69,8 @@ fun RadioControls(modifier: Modifier = Modifier) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(50.dp)
-                        .clip(CircleShape), contentDescription = "Nuestra Radio"
+                        .clip(CircleShape),
+                    contentDescription = "Nuestra Radio"
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(
@@ -147,7 +148,7 @@ fun Banner(modifier: Modifier = Modifier) {
                 )
                 Text(
                     modifier = Modifier.padding(start = 50.dp),
-                    text = "Nuestra Radio",
+                    text = "Radio Name",
                     style = Typography.h1,
                     color = Color.White
                 )
